@@ -1,7 +1,5 @@
-import LoginLayout from "@/app/components/layout/Login";
+import LoginPage from "@/app/components/login/LoginPage";
 
-export default function Login(){
-    return(
-        <Login/>
-    )
+export default function Login() {
+  return <LoginPage />;
 }
