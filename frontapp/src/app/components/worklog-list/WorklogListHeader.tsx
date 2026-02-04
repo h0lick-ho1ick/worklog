@@ -1,28 +1,43 @@
-const TEAM_OPTIONS = ["ALL", "A팀", "B팀", "C팀"];
-const DATE_OPTIONS = ["2026 / 01 / 27", "2026 / 01 / 26", "2026 / 01 / 25"];
+const TEAM_OPTIONS = ["ALL", "A조", "B조", "C조", "D조"];
 
-export default function WorklogListHeader() {
+type WorklogListHeaderProps = {
+  dateOptions: string[];
+  selectedDate: string;
+  onDateChange: (value: string) => void;
+};
+
+export default function WorklogListHeader({
+  dateOptions,
+  selectedDate,
+  onDateChange,
+}: WorklogListHeaderProps) {
   return (
     <div className="list-card__head">
-      <h2 className="list-card__title">업무 일지 현황</h2>
+      <div className="list-card__head-top">
+        <h2 className="list-card__title">업무 일지 현황</h2>
 
-      <div className="filters">
-        <div className="filter">
-          <span className="filter__label">작성 팀</span>
-          <select className="control control--sm">
-            {TEAM_OPTIONS.map((option) => (
-              <option key={option}>{option}</option>
-            ))}
-          </select>
-        </div>
+        <div className="filters">
+          <div className="filter">
+            <span className="filter__label">작성 팀</span>
+            <select className="control control--sm">
+              {TEAM_OPTIONS.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </div>
 
-        <div className="filter">
-          <span className="filter__label">날짜</span>
-          <select className="control control--date">
-            {DATE_OPTIONS.map((option) => (
-              <option key={option}>{option}</option>
-            ))}
-          </select>
+          <div className="filter">
+            <span className="filter__label">날짜</span>
+            <select
+              className="control control--date"
+              value={selectedDate}
+              onChange={(event) => onDateChange(event.target.value)}
+            >
+              {dateOptions.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
     </div>

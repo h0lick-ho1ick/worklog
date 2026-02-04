@@ -109,24 +109,34 @@
 
 .actions {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 14px 0 6px;
 }
 
 .btn {
-  height: 30px;
-  padding: 0 26px;
+  height: 38px;
+  padding: 0 32px;
   border-radius: 8px;
   border: 0;
   cursor: pointer;
   font-weight: 800;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .btn--primary {
   background: var(--primary);
   color: #fff;
   box-shadow: 0 8px 14px rgba(75, 85, 199, 0.25);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid #c8c8c8;
+}
+
+.actions .btn + .btn {
+  margin-left: 10px;
 }
 
 .table-wrap {

@@ -1,6 +1,5 @@
 ﻿import WorklogForm from "@/app/components/worklog/WorklogForm";
 import WorklogTable from "@/app/components/worklog/WorklogTable";
-import WorklogFab from "@/app/components/worklog/WorklogFab";
 
 export default function WorklogPage() {
   return (
@@ -9,7 +8,6 @@ export default function WorklogPage() {
         <WorklogForm />
         <WorklogTable />
       </section>
-      <WorklogFab />
     </main>
   );
 }
