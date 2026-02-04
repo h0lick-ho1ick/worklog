@@ -16,6 +16,11 @@ public class Worklog {
 
     private String title;    // 제목
     private String content;  // 내용
-    private String author;   // 작성자
+
+    // 추가: 작성자와의 연관관계 (N:1)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Users user;
+
     private LocalDateTime createdAt = LocalDateTime.now(); // 생성시간
 }
