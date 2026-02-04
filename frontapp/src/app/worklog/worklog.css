@@ -10,7 +10,7 @@
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding: calc(28px + 56px) 14px 80px;
+  padding: calc(28px + var(--nav-height)) 14px 80px;
   background: var(--bg);
   color: var(--text);
   font-family: "Segoe UI", "Noto Sans KR", system-ui, sans-serif;
