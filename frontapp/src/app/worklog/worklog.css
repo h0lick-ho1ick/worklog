@@ -10,7 +10,7 @@
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding: calc(28px + var(--nav-height)) 14px 80px;
+  padding: calc(28px + var(--nav-height)) 24px 80px;
   background: var(--bg);
   color: var(--text);
   font-family: "Segoe UI", "Noto Sans KR", system-ui, sans-serif;
@@ -23,7 +23,8 @@
 }
 
 .panel {
-  width: min(900px, 92vw);
+  width: 100%;
+  max-width: 72rem;
   background: var(--card);
   border-radius: 8px;
   box-shadow: var(--shadow);
@@ -32,7 +33,7 @@
 
 .panel__header {
   background: var(--primary);
-  padding: 18px 22px;
+  padding: 18px 24px;
 }
 
 .panel__title {
@@ -43,7 +44,7 @@
 }
 
 .panel__body {
-  padding: 18px 22px 10px;
+  padding: 18px 24px 10px;
 }
 
 .grid {

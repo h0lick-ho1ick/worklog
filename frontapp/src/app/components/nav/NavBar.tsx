@@ -9,7 +9,7 @@ const NAV_LABELS = {
 export default function NavBar() {
   return (
     <nav className="navwrap fixed top-0 left-0 z-50 w-full bg-slate-800 text-white">
-      <div className="navinner mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
+      <div className="navinner mx-auto flex h-14 max-w-6xl items-center justify-between">
         <div className="navlogo text-lg font-semibold">
           <Link href="/">{NAV_LABELS.brand}</Link>
         </div>
