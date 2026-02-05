@@ -51,6 +51,13 @@ public class WorklogController {
                 .map(worklog -> {
                     worklog.setTitle(details.getTitle());
                     worklog.setContent(details.getContent());
+                    worklog.setGroupType(details.getGroupType());
+                    worklog.setGroupShift(details.getGroupShift());
+                    worklog.setFactory(details.getFactory());
+                    worklog.setCategory(details.getCategory());
+                    worklog.setSystem(details.getSystem());
+                    worklog.setMachine(details.getMachine());
+                    worklog.setStatus(details.getStatus());
                     return ResponseEntity.ok(worklogRepository.save(worklog));
                 })
                 .orElse(ResponseEntity.notFound().build());

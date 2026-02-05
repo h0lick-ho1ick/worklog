@@ -16,6 +16,13 @@ public class Worklog {
 
     private String title;    // 제목
     private String content;  // 내용
+    private String groupType;
+    private String groupShift;
+    private String factory;
+    private String category;
+    private String system;
+    private String machine;
+    private String status;
 
     // 추가: 작성자와의 연관관계 (N:1)
     @ManyToOne(fetch = FetchType.LAZY)

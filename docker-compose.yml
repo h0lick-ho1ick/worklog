@@ -1,4 +1,4 @@
-version: '3.8'
+﻿version: "3.8"
 services:
   db:
     image: postgres:15
@@ -7,8 +7,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
       POSTGRES_DB: work_journal
     volumes:
       - ./postgres_data:/var/lib/postgresql/data

@@ -1,5 +1,3 @@
-const TEAM_OPTIONS = ["ALL", "A조", "B조", "C조", "D조"];
-
 type WorklogListHeaderProps = {
   dateOptions: string[];
   selectedDate: string;
@@ -11,31 +9,29 @@ export default function WorklogListHeader({
   selectedDate,
   onDateChange,
 }: WorklogListHeaderProps) {
+  const hasOptions = dateOptions.length > 0;
+
   return (
     <div className="list-card__head">
       <div className="list-card__head-top">
-        <h2 className="list-card__title">업무 일지 현황</h2>
+        <h2 className="list-card__title">Worklog List</h2>
 
         <div className="filters">
           <div className="filter">
-            <span className="filter__label">작성 팀</span>
-            <select className="control control--sm">
-              {TEAM_OPTIONS.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="filter">
-            <span className="filter__label">날짜</span>
+            <span className="filter__label">Date</span>
             <select
               className="control control--date"
               value={selectedDate}
               onChange={(event) => onDateChange(event.target.value)}
+              disabled={!hasOptions}
             >
-              {dateOptions.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
+              {hasOptions ? (
+                dateOptions.map((option) => (
+                  <option key={option}>{option}</option>
+                ))
+              ) : (
+                <option>No dates</option>
+              )}
             </select>
           </div>
         </div>

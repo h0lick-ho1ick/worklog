@@ -1,68 +1,131 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import WorklogListFab from "@/app/components/worklog-list/WorklogListFab";
 import WorklogListHandoff from "@/app/components/worklog-list/WorklogListHandoff";
 import WorklogListHeader from "@/app/components/worklog-list/WorklogListHeader";
 import WorklogListTable from "@/app/components/worklog-list/WorklogListTable";
+import {
+  deleteWorklog,
+  getWorklogs,
+  type Worklog,
+} from "@/app/lib/worklogApi";
 
-const WORKLOG_ROWS = [
-  {
-    id: 1,
-    date: "2026 / 01 / 27",
-    factory: "HU1",
-    system: "MES",
-    room: "헝가리1,2,시...",
-    detail: "업무내용",
-    time: "16:09",
-    completionTime: "18:02",
-    status: "완료",
-    owner: "홍길동",
-    writer: "B조 / 이희호",
-    note: "무야호",
-  },
-  {
-    id: 2,
-    date: "2026 / 01 / 27",
-    factory: "CA",
-    system: "MES",
-    room: "천안 IT 상황...",
-    detail: "업무내용",
-    time: "16:09",
-    completionTime: "17:20",
-    status: "진행 중",
-    owner: "홍길동",
-    writer: "D조 / 함태식",
-    note: "무야호",
-  },
-  {
-    id: 3,
-    date: "2026 / 01 / 26",
-    factory: "CA",
-    system: "MES",
-    room: "천안 IT 상황...",
-    detail: "업무내용",
-    time: "16:09",
-    completionTime: "18:45",
-    status: "등록",
-    owner: "홍길동",
-    writer: "A조 / 서영석",
-    note: "무야호",
-  },
-];
+type WorklogRow = {
+  id: number;
+  writer: string;
+  title: string;
+  content: string;
+  createdDate: string;
+  createdTime: string;
+};
+
+function formatDate(value?: string | null) {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year} / ${month} / ${day}`;
+}
+
+function formatTime(value?: string | null) {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
+function toRow(worklog: Worklog): WorklogRow {
+  const writer =
+    worklog.user?.name?.trim() ||
+    worklog.user?.username?.trim() ||
+    "-";
+  return {
+    id: worklog.id,
+    writer,
+    title: worklog.title ?? "-",
+    content: worklog.content ?? "-",
+    createdDate: formatDate(worklog.createdAt),
+    createdTime: formatTime(worklog.createdAt),
+  };
+}
 
 export default function WorklogListPage() {
-  const dateOptions = useMemo(
-    () => Array.from(new Set(WORKLOG_ROWS.map((row) => row.date))),
-    []
-  );
-  const [selectedDate, setSelectedDate] = useState(dateOptions[0] ?? "");
+  const router = useRouter();
+  const [worklogs, setWorklogs] = useState<Worklog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+    setErrorMessage(null);
+    getWorklogs()
+      .then((data) => {
+        if (isMounted) {
+          setWorklogs(Array.isArray(data) ? data : []);
+        }
+      })
+      .catch((error: unknown) => {
+        if (isMounted) {
+          setErrorMessage(
+            error instanceof Error ? error.message : "Failed to load worklogs."
+          );
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const rows = useMemo(() => worklogs.map(toRow), [worklogs]);
+  const dateOptions = useMemo(() => {
+    const unique = new Set(rows.map((row) => row.createdDate));
+    return Array.from(unique).filter((value) => value && value !== "-");
+  }, [rows]);
+
+  useEffect(() => {
+    if (!selectedDate && dateOptions.length > 0) {
+      setSelectedDate(dateOptions[0]);
+    }
+    if (selectedDate && !dateOptions.includes(selectedDate)) {
+      setSelectedDate(dateOptions[0] ?? "");
+    }
+  }, [dateOptions, selectedDate]);
+
   const filteredRows = useMemo(() => {
     if (!selectedDate) {
-      return WORKLOG_ROWS;
+      return rows;
     }
-    return WORKLOG_ROWS.filter((row) => row.date === selectedDate);
-  }, [selectedDate]);
+    return rows.filter((row) => row.createdDate === selectedDate);
+  }, [rows, selectedDate]);
+
+  const handleEdit = (id: number) => {
+    router.push(`/worklog?edit=${id}`);
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("Delete this worklog?")) return;
+    try {
+      await deleteWorklog(id);
+      const next = await getWorklogs();
+      setWorklogs(Array.isArray(next) ? next : []);
+    } catch (error: unknown) {
+      alert(error instanceof Error ? error.message : "Failed to delete worklog.");
+    }
+  };
 
   return (
     <main className="worklog-list-page">
@@ -73,7 +136,13 @@ export default function WorklogListPage() {
           onDateChange={setSelectedDate}
         />
         <WorklogListHandoff />
-        <WorklogListTable rows={filteredRows} />
+        <WorklogListTable
+          rows={filteredRows}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       </section>
       <WorklogListFab />
     </main>
