@@ -88,6 +88,12 @@ export default function WorklogForm({
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  useEffect(() => {
+    if (form.status !== "완료" && form.endTime) {
+      setForm((prev) => ({ ...prev, endTime: "" }));
+    }
+  }, [form.status, form.endTime]);
+
   const handleSubmit = async () => {
     const trimmedContent = form.content.trim();
     if (!trimmedContent) {
@@ -154,12 +160,15 @@ export default function WorklogForm({
     }
 
     if (field.kind === "time") {
+      const isEndTime = field.stateKey === "endTime";
+      const isDisabled = isEndTime && form.status !== "완료";
       return (
         <input
           className="control"
           type="time"
           value={form[field.stateKey] ?? ""}
           onChange={(event) => handleFieldChange(field.stateKey, event.target.value)}
+          disabled={isDisabled}
         />
       );
     }

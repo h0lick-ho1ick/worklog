@@ -1,11 +1,54 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import WorklogForm from "@/app/components/worklog/WorklogForm";
 import WorklogTable from "@/app/components/worklog/WorklogTable";
 import { deleteWorklog, getWorklogs, type Worklog } from "@/app/lib/worklogApi";
-import { toWorklogRow } from "@/app/lib/worklogFormat";
+
+const formatDate = (value?: string | null) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year} / ${month} / ${day}`;
+};
+
+function toRow(worklog: Worklog) {
+  const authorName =
+    worklog.authorName?.trim() ||
+    worklog.user?.name?.trim() ||
+    worklog.user?.username?.trim() ||
+    "-";
+
+  const workDate = worklog.workDate
+    ? (() => {
+        const [year, month, day] = worklog.workDate.split("-");
+        if (year && month && day) {
+          return `${year} / ${month} / ${day}`;
+        }
+        return worklog.workDate;
+      })()
+    : formatDate(worklog.createdAt);
+
+  return {
+    id: worklog.id,
+    workDate: workDate ?? "-",
+    authorName,
+    groupType: worklog.groupType ?? "-",
+    groupShift: worklog.groupShift ?? "-",
+    factory: worklog.factory ?? "-",
+    category: worklog.category ?? "-",
+    system: worklog.system ?? "-",
+    machine: worklog.machine ?? "-",
+    status: worklog.status ?? "-",
+    assignee: worklog.assignee ?? "-",
+    startTime: worklog.startTime ?? "-",
+    endTime: worklog.endTime ?? "-",
+  };
+}
 
 export default function WorklogPage() {
   const searchParams = useSearchParams();
@@ -42,7 +85,7 @@ export default function WorklogPage() {
     setSelectedWorklog(found);
   }, [editId, worklogs]);
 
-  const rows = useMemo(() => worklogs.map(toWorklogRow), [worklogs]);
+  const rows = useMemo(() => worklogs.map(toRow), [worklogs]);
 
   const handleEdit = (id: number) => {
     const found = worklogs.find((item) => item.id === id) ?? null;
