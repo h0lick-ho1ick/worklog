@@ -102,6 +102,11 @@
   gap: 6px;
 }
 
+.handoff__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .control--sm {
   width: 88px;
 }
@@ -126,6 +131,7 @@
   border-bottom: 1px solid var(--line);
   color: #3a3a3a;
   background: #fff;
+  white-space: nowrap;
 }
 
 .table tbody td {
@@ -167,9 +173,49 @@
   border-color: rgba(196, 49, 49, 0.4);
 }
 
+.pager {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 0 22px;
+}
+
+.pager__btn {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  color: #333;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.pager__btn.is-active {
+  font-weight: 900;
+  text-decoration: underline;
+}
+
+.btn {
+  height: 34px;
+  padding: 0 24px;
+  border-radius: 8px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 8px 14px rgba(75, 85, 199, 0.25);
+}
+
 
 .num {
   width: 44px;
+  min-width: 44px;
   text-align: center;
   color: #333;
 }

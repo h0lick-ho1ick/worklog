@@ -1,11 +1,4 @@
-type WorklogRow = {
-  id: number;
-  title: string;
-  content: string;
-  writer: string;
-  createdDate: string;
-  createdTime: string;
-};
+import type { WorklogRow } from "@/app/lib/worklogFormat";
 
 type WorklogTableProps = {
   rows: WorklogRow[];
@@ -57,14 +50,14 @@ export default function WorklogTable({
                     className="action-btn action-btn--edit"
                     onClick={() => onEdit(row.id)}
                   >
-                    edit
+                    수정
                   </button>
                   <button
                     type="button"
                     className="action-btn action-btn--delete"
                     onClick={() => onDelete(row.id)}
                   >
-                    delete
+                    삭제
                   </button>
                 </td>
               </tr>

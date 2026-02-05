@@ -1,10 +1,17 @@
-type WorklogRow = {
+﻿type WorklogRow = {
   id: number;
-  writer: string;
-  title: string;
-  content: string;
-  createdDate: string;
-  createdTime: string;
+  workDate: string;
+  authorName: string;
+  groupType: string;
+  groupShift: string;
+  factory: string;
+  category: string;
+  system: string;
+  machine: string;
+  status: string;
+  assignee: string;
+  startTime: string;
+  endTime: string;
 };
 
 type WorklogListTableProps = {
@@ -27,29 +34,35 @@ export default function WorklogListTable({
       <table className="table">
         <thead>
           <tr>
-            <th>no</th>
-            <th>title</th>
-            <th>content</th>
-            <th>writer</th>
-            <th>date</th>
-            <th>time</th>
-            <th></th>
+            <th className="num">번호</th>
+            <th>작성자</th>
+            <th>조 구분</th>
+            <th>그룹 shift</th>
+            <th>공장</th>
+            <th>구분</th>
+            <th>시스템</th>
+            <th>메신저 방</th>
+            <th>상태</th>
+            <th>담당자</th>
+            <th>발생시간</th>
+            <th>완료시간</th>
+            <th className="row-actions">작업</th>
           </tr>
         </thead>
         <tbody>
           {isLoading && (
             <tr>
-              <td colSpan={7}>Loading...</td>
+              <td colSpan={13}>Loading...</td>
             </tr>
           )}
           {!isLoading && errorMessage && (
             <tr>
-              <td colSpan={7}>{errorMessage}</td>
+              <td colSpan={13}>{errorMessage}</td>
             </tr>
           )}
           {!isLoading && !errorMessage && rows.length === 0 && (
             <tr>
-              <td colSpan={7}>No worklogs.</td>
+              <td colSpan={13}>No worklogs.</td>
             </tr>
           )}
           {!isLoading &&
@@ -57,25 +70,31 @@ export default function WorklogListTable({
             rows.map((row) => (
               <tr key={row.id} className="table-row">
                 <td className="num">{row.id}</td>
-                <td>{row.title}</td>
-                <td className="ellipsis">{row.content}</td>
-                <td>{row.writer}</td>
-                <td>{row.createdDate}</td>
-                <td>{row.createdTime}</td>
+                <td>{row.authorName}</td>
+                <td>{row.groupType}</td>
+                <td>{row.groupShift}</td>
+                <td>{row.factory}</td>
+                <td>{row.category}</td>
+                <td>{row.system}</td>
+                <td>{row.machine}</td>
+                <td>{row.status}</td>
+                <td>{row.assignee}</td>
+                <td>{row.startTime}</td>
+                <td>{row.endTime}</td>
                 <td className="row-actions">
                   <button
                     type="button"
                     className="action-btn action-btn--edit"
                     onClick={() => onEdit(row.id)}
                   >
-                    edit
+                    수정
                   </button>
                   <button
                     type="button"
                     className="action-btn action-btn--delete"
                     onClick={() => onDelete(row.id)}
                   >
-                    delete
+                    삭제
                   </button>
                 </td>
               </tr>

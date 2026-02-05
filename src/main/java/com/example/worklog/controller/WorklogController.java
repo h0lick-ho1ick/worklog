@@ -58,6 +58,13 @@ public class WorklogController {
                     worklog.setSystem(details.getSystem());
                     worklog.setMachine(details.getMachine());
                     worklog.setStatus(details.getStatus());
+                    worklog.setAssignee(details.getAssignee());
+                    worklog.setAuthorName(details.getAuthorName());
+                    worklog.setWorkDate(details.getWorkDate());
+                    worklog.setStartTime(details.getStartTime());
+                    worklog.setEndTime(details.getEndTime());
+                    worklog.setNote(details.getNote());
+                    worklog.setOpinion(details.getOpinion());
                     return ResponseEntity.ok(worklogRepository.save(worklog));
                 })
                 .orElse(ResponseEntity.notFound().build());

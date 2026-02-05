@@ -1,16 +1,12 @@
 type WorklogListHeaderProps = {
-  dateOptions: string[];
-  selectedDate: string;
-  onDateChange: (value: string) => void;
+  selectedCalendarDate: string;
+  onCalendarDateChange: (value: string) => void;
 };
 
 export default function WorklogListHeader({
-  dateOptions,
-  selectedDate,
-  onDateChange,
+  selectedCalendarDate,
+  onCalendarDateChange,
 }: WorklogListHeaderProps) {
-  const hasOptions = dateOptions.length > 0;
-
   return (
     <div className="list-card__head">
       <div className="list-card__head-top">
@@ -19,20 +15,12 @@ export default function WorklogListHeader({
         <div className="filters">
           <div className="filter">
             <span className="filter__label">Date</span>
-            <select
+            <input
               className="control control--date"
-              value={selectedDate}
-              onChange={(event) => onDateChange(event.target.value)}
-              disabled={!hasOptions}
-            >
-              {hasOptions ? (
-                dateOptions.map((option) => (
-                  <option key={option}>{option}</option>
-                ))
-              ) : (
-                <option>No dates</option>
-              )}
-            </select>
+              type="date"
+              value={selectedCalendarDate}
+              onChange={(event) => onCalendarDateChange(event.target.value)}
+            />
           </div>
         </div>
       </div>

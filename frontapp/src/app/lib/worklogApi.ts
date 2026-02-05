@@ -15,8 +15,22 @@ export type Worklog = {
   system?: string | null;
   machine?: string | null;
   status?: string | null;
+  assignee?: string | null;
+  authorName?: string | null;
+  workDate?: string | null;
+  startTime?: string | null;
+  endTime?: string | null;
+  note?: string | null;
+  opinion?: string | null;
   createdAt?: string | null;
   user?: ApiUser | null;
+};
+
+export type Handoff = {
+  id: number;
+  workDate: string;
+  received?: string | null;
+  sent?: string | null;
 };
 
 const API_BASE_URL =
@@ -60,6 +74,13 @@ export async function createWorklog(payload: {
   system?: string;
   machine?: string;
   status?: string;
+  assignee?: string;
+  authorName?: string;
+  workDate?: string;
+  startTime?: string;
+  endTime?: string;
+  note?: string;
+  opinion?: string;
 }): Promise<Worklog> {
   return request<Worklog>("/api/worklog", {
     method: "POST",
@@ -83,6 +104,13 @@ export async function updateWorklog(
     system?: string;
     machine?: string;
     status?: string;
+    assignee?: string;
+    authorName?: string;
+    workDate?: string;
+    startTime?: string;
+    endTime?: string;
+    note?: string;
+    opinion?: string;
   }
 ): Promise<Worklog> {
   return request<Worklog>(`/api/worklog/${id}`, {
@@ -94,5 +122,32 @@ export async function updateWorklog(
 export async function deleteWorklog(id: number): Promise<void> {
   return request<void>(`/api/worklog/${id}`, {
     method: "DELETE",
+  });
+}
+
+export async function getHandoff(date: string): Promise<Handoff | null> {
+  const res = await fetch(`${API_BASE_URL}/api/handoff?date=${encodeURIComponent(date)}`, {
+    headers: { "Content-Type": "application/json" },
+    cache: "no-store",
+  });
+
+  if (res.status === 204) return null;
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(
+      text ? `Request failed: ${res.status} ${text}` : `Request failed: ${res.status}`
+    );
+  }
+  return (await res.json()) as Handoff;
+}
+
+export async function saveHandoff(payload: {
+  workDate: string;
+  received?: string;
+  sent?: string;
+}): Promise<Handoff> {
+  return request<Handoff>("/api/handoff", {
+    method: "POST",
+    body: JSON.stringify(payload),
   });
 }

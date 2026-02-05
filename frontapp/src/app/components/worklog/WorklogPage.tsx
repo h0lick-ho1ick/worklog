@@ -4,54 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import WorklogForm from "@/app/components/worklog/WorklogForm";
 import WorklogTable from "@/app/components/worklog/WorklogTable";
-import {
-  deleteWorklog,
-  getWorklogs,
-  type Worklog,
-} from "@/app/lib/worklogApi";
-
-type WorklogRow = {
-  id: number;
-  title: string;
-  content: string;
-  writer: string;
-  createdDate: string;
-  createdTime: string;
-};
-
-function formatDate(value?: string | null) {
-  if (!value) return "-";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "-";
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year} / ${month} / ${day}`;
-}
-
-function formatTime(value?: string | null) {
-  if (!value) return "-";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "-";
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${hours}:${minutes}`;
-}
-
-function toRow(worklog: Worklog): WorklogRow {
-  const writer =
-    worklog.user?.name?.trim() ||
-    worklog.user?.username?.trim() ||
-    "-";
-  return {
-    id: worklog.id,
-    title: worklog.title ?? "-",
-    content: worklog.content ?? "-",
-    writer,
-    createdDate: formatDate(worklog.createdAt),
-    createdTime: formatTime(worklog.createdAt),
-  };
-}
+import { deleteWorklog, getWorklogs, type Worklog } from "@/app/lib/worklogApi";
+import { toWorklogRow } from "@/app/lib/worklogFormat";
 
 export default function WorklogPage() {
   const searchParams = useSearchParams();
@@ -88,7 +42,7 @@ export default function WorklogPage() {
     setSelectedWorklog(found);
   }, [editId, worklogs]);
 
-  const rows = useMemo(() => worklogs.map(toRow), [worklogs]);
+  const rows = useMemo(() => worklogs.map(toWorklogRow), [worklogs]);
 
   const handleEdit = (id: number) => {
     const found = worklogs.find((item) => item.id === id) ?? null;
