@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -6,81 +6,34 @@ import WorklogListFab from "@/app/components/worklog-list/WorklogListFab";
 import WorklogListHandoff from "@/app/components/worklog-list/WorklogListHandoff";
 import WorklogListHeader from "@/app/components/worklog-list/WorklogListHeader";
 import WorklogListTable from "@/app/components/worklog-list/WorklogListTable";
+import { getErrorMessage } from "@/app/lib/error";
+import {
+  formatDate,
+  toWorklogListRow,
+  type WorklogListRow,
+} from "@/app/lib/worklogFormat";
 import {
   deleteWorklog,
-  getWorklogs,
   getHandoff,
+  getWorklogs,
   saveHandoff,
   type Worklog,
 } from "@/app/lib/worklogApi";
 
-type WorklogRow = {
-  id: number;
-  workDate: string;
-  authorName: string;
-  groupType: string;
-  groupShift: string;
-  factory: string;
-  category: string;
-  system: string;
-  machine: string;
-  status: string;
-  assignee: string;
-  startTime: string;
-  endTime: string;
-};
-
-function formatDate(value?: string | null) {
-  if (!value) return "-";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "-";
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year} / ${month} / ${day}`;
+function toIsoDateInput(slashDate: string) {
+  const [year, month, day] = slashDate.split(" / ");
+  if (year && month && day) {
+    return `${year}-${month}-${day}`;
+  }
+  return "";
 }
 
-function formatTime(value?: string | null) {
-  if (!value) return "-";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "-";
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${hours}:${minutes}`;
-}
-
-function toRow(worklog: Worklog): WorklogRow {
-  const authorName =
-    worklog.authorName?.trim() ||
-    worklog.user?.name?.trim() ||
-    worklog.user?.username?.trim() ||
-    "-";
-
-  const workDate = worklog.workDate
-    ? (() => {
-        const [year, month, day] = worklog.workDate.split("-");
-        if (year && month && day) {
-          return `${year} / ${month} / ${day}`;
-        }
-        return worklog.workDate;
-      })()
-    : formatDate(worklog.createdAt);
-
-  return {
-    id: worklog.id,
-    workDate: workDate ?? "-",
-    authorName,
-    groupType: worklog.groupType ?? "-",
-    groupShift: worklog.groupShift ?? "-",
-    factory: worklog.factory ?? "-",
-    category: worklog.category ?? "-",
-    system: worklog.system ?? "-",
-    machine: worklog.machine ?? "-",
-    status: worklog.status ?? "-",
-    assignee: worklog.assignee ?? "-",
-    startTime: worklog.startTime ?? "-",
-    endTime: worklog.endTime ?? "-",
-  };
+function getTodayIsoDate() {
+  const today = new Date();
+  const year = String(today.getFullYear());
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 export default function WorklogListPage() {
@@ -100,6 +53,7 @@ export default function WorklogListPage() {
     let isMounted = true;
     setIsLoading(true);
     setErrorMessage(null);
+
     getWorklogs()
       .then((data) => {
         if (isMounted) {
@@ -108,9 +62,7 @@ export default function WorklogListPage() {
       })
       .catch((error: unknown) => {
         if (isMounted) {
-          setErrorMessage(
-            error instanceof Error ? error.message : "Failed to load worklogs."
-          );
+          setErrorMessage(getErrorMessage(error, "작업일지를 불러오지 못했습니다."));
         }
       })
       .finally(() => {
@@ -124,7 +76,11 @@ export default function WorklogListPage() {
     };
   }, []);
 
-  const rows = useMemo(() => worklogs.map(toRow), [worklogs]);
+  const rows = useMemo<WorklogListRow[]>(
+    () => worklogs.map(toWorklogListRow),
+    [worklogs]
+  );
+
   const dateOptions = useMemo(() => {
     const unique = new Set(rows.map((row) => row.workDate));
     return Array.from(unique).filter((value) => value && value !== "-");
@@ -132,24 +88,21 @@ export default function WorklogListPage() {
 
   useEffect(() => {
     if (!selectedCalendarDate && dateOptions.length > 0) {
-      const [year, month, day] = dateOptions[0].split(" / ");
-      if (year && month && day) {
-        setSelectedCalendarDate(`${year}-${month}-${day}`);
-      }
+      setSelectedCalendarDate(toIsoDateInput(dateOptions[0]));
+      return;
     }
+
     if (!selectedCalendarDate && dateOptions.length === 0) {
-      const today = new Date();
-      const year = String(today.getFullYear());
-      const month = String(today.getMonth() + 1).padStart(2, "0");
-      const day = String(today.getDate()).padStart(2, "0");
-      setSelectedCalendarDate(`${year}-${month}-${day}`);
+      setSelectedCalendarDate(getTodayIsoDate());
     }
   }, [dateOptions, selectedCalendarDate]);
 
   useEffect(() => {
     if (!selectedCalendarDate) return;
+
     let isMounted = true;
     setHandoffError(null);
+
     getHandoff(selectedCalendarDate)
       .then((data) => {
         if (!isMounted) return;
@@ -158,10 +111,9 @@ export default function WorklogListPage() {
       })
       .catch((error: unknown) => {
         if (!isMounted) return;
-        setHandoffError(
-          error instanceof Error ? error.message : "Failed to load handoff."
-        );
+        setHandoffError(getErrorMessage(error, "인계사항을 불러오지 못했습니다."));
       });
+
     return () => {
       isMounted = false;
     };
@@ -172,18 +124,17 @@ export default function WorklogListPage() {
   }, [selectedCalendarDate]);
 
   const filteredRows = useMemo(() => {
-    if (selectedCalendarDate) {
-      const [year, month, day] = selectedCalendarDate.split("-");
-      if (year && month && day) {
-        const formatted = `${year} / ${month} / ${day}`;
-        return rows.filter((row) => row.workDate === formatted);
-      }
+    if (!selectedCalendarDate) {
+      return rows;
     }
-    return rows;
+
+    const formattedDate = formatDate(selectedCalendarDate);
+    return rows.filter((row) => row.workDate === formattedDate);
   }, [rows, selectedCalendarDate]);
 
   const totalPages = Math.max(1, Math.ceil(filteredRows.length / pageSize));
   const safePage = Math.min(currentPage, totalPages);
+
   const pagedRows = useMemo(() => {
     const start = (safePage - 1) * pageSize;
     return filteredRows.slice(start, start + pageSize);
@@ -194,20 +145,23 @@ export default function WorklogListPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Delete this worklog?")) return;
+    if (!confirm("이 작업일지를 삭제할까요?")) return;
+
     try {
       await deleteWorklog(id);
       const next = await getWorklogs();
       setWorklogs(Array.isArray(next) ? next : []);
     } catch (error: unknown) {
-      alert(error instanceof Error ? error.message : "Failed to delete worklog.");
+      alert(getErrorMessage(error, "작업일지 삭제에 실패했습니다."));
     }
   };
 
   const handleSaveHandoff = async () => {
     if (!selectedCalendarDate) return;
+
     setHandoffSaving(true);
     setHandoffError(null);
+
     try {
       await saveHandoff({
         workDate: selectedCalendarDate,
@@ -215,12 +169,14 @@ export default function WorklogListPage() {
         sent: handoffSent,
       });
     } catch (error: unknown) {
-      setHandoffError(
-        error instanceof Error ? error.message : "Failed to save handoff."
-      );
+      setHandoffError(getErrorMessage(error, "인계사항 저장에 실패했습니다."));
     } finally {
       setHandoffSaving(false);
     }
+  };
+
+  const handleRowClick = (id: number) => {
+    router.push(`/worklog/${id}`);
   };
 
   return (
@@ -245,6 +201,7 @@ export default function WorklogListPage() {
           errorMessage={errorMessage}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onRowClick={handleRowClick}
         />
         {totalPages > 1 && (
           <div className="pager">
@@ -254,7 +211,7 @@ export default function WorklogListPage() {
               onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
               disabled={safePage === 1}
             >
-              Prev
+              이전
             </button>
             {Array.from({ length: totalPages }, (_, index) => {
               const page = index + 1;
@@ -273,10 +230,12 @@ export default function WorklogListPage() {
             <button
               className="pager__btn"
               type="button"
-              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+              }
               disabled={safePage === totalPages}
             >
-              Next
+              다음
             </button>
           </div>
         )}
@@ -285,3 +244,4 @@ export default function WorklogListPage() {
     </main>
   );
 }
+
