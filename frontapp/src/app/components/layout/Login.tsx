@@ -1,5 +1,4 @@
-export default function Login({ children }: {children: React.ReactNode; }){
-    return(
-<div></div>
-    )
+﻿export default function Login({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }
+

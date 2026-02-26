@@ -18,9 +18,9 @@ type WorklogFormProps = {
   onCancelEdit?: () => void;
 };
 
-const FIELDSET_TITLE = "입력 작업 작성";
-const CONTENT_LABEL = "입력 내용";
-const SUBMIT_LABEL = "작성";
+const FIELDSET_TITLE = "작업일지 작성";
+const CONTENT_LABEL = "작업 내용";
+const SUBMIT_LABEL = "저장";
 const SUBMITTING_LABEL = "저장 중...";
 const EMPTY_CONTENT_MESSAGE = "입력 내용을 작성해 주세요.";
 const SAVE_FAILED_MESSAGE = "저장에 실패했습니다.";

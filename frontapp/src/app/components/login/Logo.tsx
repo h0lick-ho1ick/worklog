@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "./Login.module.css";
 
 export default function Logo() {

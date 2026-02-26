@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/worklog")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class WorklogController {
 
     // 변수명도 클래스명에 맞춰 변경하는 것이 관례입니다.

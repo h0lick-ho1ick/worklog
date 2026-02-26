@@ -33,6 +33,25 @@ export type Handoff = {
   sent?: string | null;
 };
 
+export type WorklogPayload = {
+  title: string;
+  content: string;
+  groupType?: string;
+  groupShift?: string;
+  factory?: string;
+  category?: string;
+  system?: string;
+  machine?: string;
+  status?: string;
+  assignee?: string;
+  authorName?: string;
+  workDate?: string;
+  startTime?: string;
+  endTime?: string;
+  note?: string;
+  opinion?: string;
+};
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
 
@@ -64,24 +83,7 @@ export async function getWorklogs(): Promise<Worklog[]> {
   return request<Worklog[]>("/api/worklog");
 }
 
-export async function createWorklog(payload: {
-  title: string;
-  content: string;
-  groupType?: string;
-  groupShift?: string;
-  factory?: string;
-  category?: string;
-  system?: string;
-  machine?: string;
-  status?: string;
-  assignee?: string;
-  authorName?: string;
-  workDate?: string;
-  startTime?: string;
-  endTime?: string;
-  note?: string;
-  opinion?: string;
-}): Promise<Worklog> {
+export async function createWorklog(payload: WorklogPayload): Promise<Worklog> {
   return request<Worklog>("/api/worklog", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -94,24 +96,7 @@ export async function getWorklog(id: number): Promise<Worklog> {
 
 export async function updateWorklog(
   id: number,
-  payload: {
-    title: string;
-    content: string;
-    groupType?: string;
-    groupShift?: string;
-    factory?: string;
-    category?: string;
-    system?: string;
-    machine?: string;
-    status?: string;
-    assignee?: string;
-    authorName?: string;
-    workDate?: string;
-    startTime?: string;
-    endTime?: string;
-    note?: string;
-    opinion?: string;
-  }
+  payload: WorklogPayload
 ): Promise<Worklog> {
   return request<Worklog>(`/api/worklog/${id}`, {
     method: "PUT",
