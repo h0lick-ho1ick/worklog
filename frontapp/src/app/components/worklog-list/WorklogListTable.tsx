@@ -1,25 +1,12 @@
-﻿type WorklogRow = {
-  id: number;
-  workDate: string;
-  authorName: string;
-  groupType: string;
-  groupShift: string;
-  factory: string;
-  category: string;
-  system: string;
-  machine: string;
-  status: string;
-  assignee: string;
-  startTime: string;
-  endTime: string;
-};
+﻿import type { WorklogListRow } from "@/app/lib/worklogFormat";
 
 type WorklogListTableProps = {
-  rows: WorklogRow[];
+  rows: WorklogListRow[];
   isLoading: boolean;
   errorMessage?: string | null;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
+  onRowClick?: (id: number) => void;
 };
 
 export default function WorklogListTable({
@@ -28,6 +15,7 @@ export default function WorklogListTable({
   errorMessage,
   onEdit,
   onDelete,
+  onRowClick,
 }: WorklogListTableProps) {
   return (
     <div className="table-wrap">
@@ -52,7 +40,7 @@ export default function WorklogListTable({
         <tbody>
           {isLoading && (
             <tr>
-              <td colSpan={13}>Loading...</td>
+              <td colSpan={13}>불러오는 중...</td>
             </tr>
           )}
           {!isLoading && errorMessage && (
@@ -62,13 +50,17 @@ export default function WorklogListTable({
           )}
           {!isLoading && !errorMessage && rows.length === 0 && (
             <tr>
-              <td colSpan={13}>No worklogs.</td>
+              <td colSpan={13}>등록된 작업일지가 없습니다.</td>
             </tr>
           )}
           {!isLoading &&
             !errorMessage &&
             rows.map((row) => (
-              <tr key={row.id} className="table-row">
+              <tr
+                key={row.id}
+                className="table-row"
+                onClick={() => onRowClick?.(row.id)}
+              >
                 <td className="num">{row.id}</td>
                 <td>{row.authorName}</td>
                 <td>{row.groupType}</td>
@@ -85,14 +77,20 @@ export default function WorklogListTable({
                   <button
                     type="button"
                     className="action-btn action-btn--edit"
-                    onClick={() => onEdit(row.id)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onEdit(row.id);
+                    }}
                   >
                     수정
                   </button>
                   <button
                     type="button"
                     className="action-btn action-btn--delete"
-                    onClick={() => onDelete(row.id)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onDelete(row.id);
+                    }}
                   >
                     삭제
                   </button>
@@ -104,3 +102,4 @@ export default function WorklogListTable({
     </div>
   );
 }
+
