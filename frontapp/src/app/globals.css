@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+:root {
+  --nav-height: 56px;
+  --app-bg: #f3f5f9;
+  --app-surface: #ffffff;
+  --app-text: #0f172a;
+  --app-muted: #64748b;
+  --app-line: #dde3ee;
+  --app-primary: #3451c6;
+  --app-primary-strong: #263ea1;
+  --app-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+}
+
+@theme inline {
+  --color-background: var(--app-bg);
+  --color-foreground: var(--app-text);
+  --font-sans: var(--font-app);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  margin: 0;
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family: var(--font-app), "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

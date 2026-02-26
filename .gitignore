@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+postgres_data/
+
+# Node / frontend artifacts
+**/node_modules/
+**/.next/
+**/out/
+/frontapp/frontapp/

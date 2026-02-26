@@ -1,0 +1,250 @@
+:root {
+  --login-bg: #f3f3f3;
+  --card-bg: #ffffff;
+  --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  --ink: #0f172a;
+  --muted-ink: #4b5563;
+  --accent-1: #1d3b6a;
+  --accent-2: #3c7dd9;
+  --accent-3: #2f4fb8;
+  --field-bg: #e6e7ea;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--login-bg);
+  padding: calc(var(--nav-height) + 24px) 24px 24px;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 900px;
+  height: 480px;
+  display: flex;
+  background: var(--card-bg);
+  border-radius: 14px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.left {
+  width: 45%;
+  background: linear-gradient(160deg, var(--accent-1), var(--accent-2));
+  color: #ffffff;
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.pin {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  position: relative;
+  display: inline-block;
+}
+
+.pin::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.leftTitle {
+  font-size: 26px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.outlineBtn {
+  width: 140px;
+  height: 42px;
+  border-radius: 22px;
+  border: 2px solid #ffffff;
+  background: transparent;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.outlineBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.right {
+  width: 55%;
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.rightTitle {
+  font-size: 28px;
+  margin: 0 0 28px;
+  color: var(--ink);
+}
+
+.panelWrap {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.panelSlider {
+  display: flex;
+  width: 200%;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.panelSliderLogin {
+  transform: translateX(0);
+}
+
+.panelSliderRegister {
+  transform: translateX(-50%);
+}
+
+.panel {
+  width: 50%;
+  padding-right: 4px;
+  border-radius: 14px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup {
+  margin-bottom: 22px;
+  display: block;
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--muted-ink);
+}
+
+.input {
+  width: 100%;
+  height: 42px;
+  border-radius: 8px;
+  border: none;
+  background: var(--field-bg);
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.input:focus {
+  outline: 2px solid rgba(47, 79, 184, 0.3);
+}
+
+.loginBtn {
+  margin-top: 20px;
+  height: 44px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent-3);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.loginBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(47, 79, 184, 0.3);
+}
+
+.panelFromLeft {
+  animation: panel-from-left 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.panelFromRight {
+  animation: panel-from-right 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes panel-from-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-32px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes panel-from-right {
+  0% {
+    opacity: 0;
+    transform: translateX(32px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panelFromLeft,
+  .panelFromRight,
+  .panelSlider {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .card {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .left,
+  .right {
+    width: 100%;
+  }
+
+  .right {
+    padding: 36px 32px;
+  }
+}

@@ -1,0 +1,259 @@
+﻿.worklog-list-page {
+  min-height: 100vh;
+  padding: calc(var(--nav-height) + 26px) 24px 72px;
+  display: flex;
+  justify-content: center;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.worklog-list-page .list-card {
+  width: 100%;
+  max-width: 72rem;
+  background: var(--app-surface);
+  border: 1px solid var(--app-line);
+  border-radius: 16px;
+  box-shadow: var(--app-shadow);
+  overflow: hidden;
+}
+
+.worklog-list-page .list-card__head {
+  background: linear-gradient(135deg, var(--app-primary), var(--app-primary-strong));
+  color: #fff;
+  padding: 18px 20px;
+}
+
+.worklog-list-page .list-card__head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.worklog-list-page .list-card__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.worklog-list-page .filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.worklog-list-page .filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.worklog-list-page .filter__label {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.95;
+}
+
+.worklog-list-page .control {
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid #d0d8ea;
+  padding: 0 12px;
+  background: #f7f9fd;
+  color: #1e293b;
+  font-size: 13px;
+  outline: none;
+}
+
+.worklog-list-page .control:focus {
+  border-color: var(--app-primary);
+  background: #fff;
+}
+
+.worklog-list-page .control--ta {
+  height: auto;
+  min-height: 72px;
+  padding: 10px 12px;
+  resize: vertical;
+  background: #fff;
+}
+
+.worklog-list-page .handoff-section {
+  padding: 16px 20px;
+  background: #fff;
+  border-bottom: 1px solid var(--app-line);
+}
+
+.worklog-list-page .handoff {
+  display: grid;
+  gap: 12px;
+}
+
+.worklog-list-page .handoff__field {
+  display: grid;
+  gap: 6px;
+}
+
+.worklog-list-page .handoff__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.worklog-list-page .control--date {
+  width: 150px;
+  background: #fff;
+}
+
+.worklog-list-page .table-wrap {
+  background: #fff;
+  overflow-x: auto;
+}
+
+.worklog-list-page .table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.worklog-list-page .table thead th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid var(--app-line);
+  color: #475569;
+  background: #f8faff;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.worklog-list-page .table tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #edf1f7;
+  white-space: nowrap;
+}
+
+.worklog-list-page .table-row {
+  cursor: pointer;
+}
+
+.worklog-list-page .table-row td {
+  transition: background-color 0.15s ease;
+}
+
+.worklog-list-page .table-row:hover td {
+  background: #eef3ff;
+}
+
+.worklog-list-page .row-actions {
+  width: 1%;
+  text-align: right;
+  padding-right: 16px;
+}
+
+.worklog-list-page .action-btn {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid #d7ddeb;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+.worklog-list-page .action-btn--edit {
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.worklog-list-page .action-btn--delete {
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.worklog-list-page .pager {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 0 24px;
+}
+
+.worklog-list-page .pager__btn {
+  min-width: 32px;
+  height: 32px;
+  border: 1px solid #d5ddef;
+  background: #fff;
+  color: #334155;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.worklog-list-page .pager__btn.is-active {
+  border-color: var(--app-primary);
+  background: var(--app-primary);
+  color: #fff;
+}
+
+.worklog-list-page .btn {
+  height: 36px;
+  padding: 0 20px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.worklog-list-page .btn--primary {
+  background: var(--app-primary);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(52, 81, 198, 0.25);
+}
+
+.worklog-list-page .num {
+  width: 52px;
+  min-width: 52px;
+  text-align: center;
+  color: #334155;
+}
+
+.worklog-list-page .fab {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--app-primary);
+  color: #fff;
+  box-shadow: 0 14px 26px rgba(37, 64, 177, 0.35);
+  cursor: pointer;
+}
+
+.worklog-list-page .fab__plus {
+  display: inline-block;
+  font-size: 32px;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .worklog-list-page {
+    padding-inline: 16px;
+  }
+
+  .worklog-list-page .list-card__head-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .worklog-list-page .filters {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
